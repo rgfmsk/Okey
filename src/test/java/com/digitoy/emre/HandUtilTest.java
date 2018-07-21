@@ -27,9 +27,9 @@ public class HandUtilTest {
         tileList.add(red2);
         tileList.add(red2);
 
-        Tile black3 = new Tile(2, 3, "black");
-        Tile black4 = new Tile(3, 4, "black");
-        Tile black5 = new Tile(4, 5, "black");
+        Tile black3 = new Tile(2, 11, "black");
+        Tile black4 = new Tile(3, 12, "black");
+        Tile black5 = new Tile(4, 13, "black");
         tileList.add(black3);
         tileList.add(black4);
         tileList.add(black5);
@@ -67,7 +67,7 @@ public class HandUtilTest {
 
         Assert.assertEquals(hand.getJokerList().size(), 1); //red1
         Assert.assertEquals(hand.getPairsList().size(), 2); //yellow1,red2
-        Assert.assertEquals(hand.getSetsList().size(), 2); // (1,1,1) , (10,10,10)
+        Assert.assertEquals(hand.getSetsList().size(), 5); // (1,1,1) , (10,10,10) , (11,11,J) , (12,12,J) , (13,13,J)
         Assert.assertEquals(hand.getRunsList().size(), 2); // (3,4,5) , (11,12,13,1)
 
 
