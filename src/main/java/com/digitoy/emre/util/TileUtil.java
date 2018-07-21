@@ -18,8 +18,10 @@ public class TileUtil {
 
     public void init(final LinkedList<Tile> tileList) {
 
-        for (int t = 0; t < TOTAL_TILE_COUNT; t++) {
-            tileList.add(createTileFromId(t));
+        for (int t = 0; t < TOTAL_TILE_COUNT/2; t++) {
+            Tile tileFromId = createTileFromId(t);
+            tileList.add(tileFromId);
+            tileList.add(tileFromId);
         }
 
     }
@@ -43,17 +45,17 @@ public class TileUtil {
 
     public void pickJoker(final LinkedList<Tile> tileList) {
         tileList.stream()
-                .filter(Tile::isFaceUp).collect(Collectors.toList())//find each faceUp Tiles
+                .filter(Tile::isIndicator).collect(Collectors.toList())//find each indicator Tiles
                 .forEach(y -> {
-                    if (y.getNumber() != 13) { // if the faceUp value is not 13
+                    if (y.getNumber() != 13) { // if the indicator value is not 13
                         tileList.stream()
-                                .filter(z -> z.getId() == y.getId() + 2) // find the next Tile by adding 2 (1 extra for the mathcing Tile, each number has 2 tiles)
+                                .filter(z -> z.getId() == y.getId() + 1) // find the next Tile by adding 1
                                 .findFirst()
                                 .get()
                                 .setJoker(true); //set the joker value to true
-                    } else { // if the faceUp value is 13, then joker must be number 1 with same color
+                    } else { // if the indicator value is 13, then joker must be number 1 with same color
                         tileList.stream()
-                                .filter(z -> z.getId() == y.getId() - 26)// find the first Tile by subtracting 26 ( because of each number has 2 tiles)
+                                .filter(z -> z.getId() == y.getId() - 13)// find the first Tile by subtracting 13
                                 .findFirst()
                                 .get()
                                 .setJoker(true);
@@ -61,39 +63,30 @@ public class TileUtil {
                 });
     }
 
-    public void pickFaceUpTile(final LinkedList<Tile> tileList) {
+    public void pickIndicatorTile(final LinkedList<Tile> tileList) {
 
         Random rand = new Random();
         int random = rand.nextInt(tileList.size() - 1); //pick a random index value from the tileList
         final Tile t = tileList.get(random); // get the Tile object with that index
 
         if (t.isFakeJoker()) { // check if it's fake joker tile, if so repeat the process
-            pickFaceUpTile(tileList);
+            pickIndicatorTile(tileList);
         } else { // if not
-            t.setFaceUp(true); // set the value of faceUp to true
-            tileList.stream() // set the value of faceUp on the matching Tile also.
-                    .filter(x -> x.getId() == createMatchingTileFromId(t.getId()).getId())
-                    .forEach(y -> y.setFaceUp(true));
+            t.setIndicator(true); // set the value of indicator to true
+            tileList.stream() // set the value of indicator on the matching Tile also.
+                    .filter(x -> x.getId() == createTileFromId(t.getId()).getId())
+                    .forEach(y -> y.setIndicator(true));
         }
 
 
     }
 
-
-    private Tile createMatchingTileFromId(int id) { // find the matching object of the tile with id "id"
-        if (id % 2 == 0) { // if id is even, then the matching tile has an id value of : (id+1)
-            return createTileFromId(id + 1);
-        } else { // if id is odd, then matching tile has an id value of : (id-1)
-            return createTileFromId(id - 1);
-        }
-
-    }
 
     private Tile createTileFromId(int id) { // create tile according to id
         Tile tile = new Tile(id, // id
-                ((id / 2) % 13) + 1, // number value of the tile (1,2,3,...13)
-                getColor(id / 2)); // color value of the tile
-        if (id > 103) { // id greater then 103 means the last 2 tiles, and they are the fakeJokers
+                (id % 13) + 1, // number value of the tile (1,2,3,...13)
+                getColor(id)); // color value of the tile
+        if (id > 51) { // id greater then 103 means the last 2 tiles, and they are the fakeJokers
             tile.setFakeJoker(true);
         }
         return tile;

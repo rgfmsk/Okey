@@ -5,7 +5,7 @@ public class Tile {
     private int number;
     private String color;
     private boolean fakeJoker = false;
-    private boolean faceUp = false;
+    private boolean indicator = false;
     private boolean joker = false;
 
     public Tile(int id, int number, String color) {
@@ -46,12 +46,12 @@ public class Tile {
         this.fakeJoker = fakeJoker;
     }
 
-    public boolean isFaceUp() {
-        return faceUp;
+    public boolean isIndicator() {
+        return indicator;
     }
 
-    public void setFaceUp(boolean faceUp) {
-        this.faceUp = faceUp;
+    public void setIndicator(boolean indicator) {
+        this.indicator = indicator;
     }
 
     public boolean isJoker() {

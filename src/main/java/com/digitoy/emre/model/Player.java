@@ -7,7 +7,8 @@ public class Player {
     private int id;
     private String name;
     private boolean extraTile = false;
-    private List<Tile> tileList = new ArrayList<>();
+    private Hand hand = new Hand();
+//    private List<Tile> tileList = new ArrayList<>();
 
     public Player(int id, String name) {
         this.id = id;
@@ -38,11 +39,19 @@ public class Player {
         this.extraTile = extraTile;
     }
 
-    public List<Tile> getTileList() {
-        return tileList;
+    public Hand getHand() {
+        return hand;
     }
 
-    public void setTileList(List<Tile> tileList) {
-        this.tileList = tileList;
+    public void setHand(Hand hand) {
+        this.hand = hand;
     }
+
+    //    public List<Tile> getTileList() {
+//        return tileList;
+//    }
+//
+//    public void setTileList(List<Tile> tileList) {
+//        this.tileList = tileList;
+//    }
 }

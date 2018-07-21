@@ -10,7 +10,7 @@ public class PrinterUtil {
     public void printPlayers(final List<Player> playerList) {
         playerList.forEach(x -> {
             System.out.println("player ==> " + x.getName());
-            printTileList(x.getTileList());
+            printTileList(x.getHand().getTileList());
         });
     }
 
@@ -42,7 +42,7 @@ public class PrinterUtil {
         System.out.println();
         x.forEach(y -> print(y.getColor()));
         System.out.println();
-        x.forEach(y -> print(y.isFaceUp() ? "faceUp" : ""));
+        x.forEach(y -> print(y.isIndicator() ? "indicator" : ""));
         System.out.println();
         x.forEach(y -> print(y.getNumber() + ""));
         System.out.println();
