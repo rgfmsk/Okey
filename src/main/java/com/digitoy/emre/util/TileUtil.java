@@ -9,16 +9,11 @@ import java.util.stream.Collectors;
 
 public class TileUtil {
 
-    private final static String FAKE_JOKER = "fake-joker";
-    private final static String YELLOW = "yellow";
-    private final static String RED = "red";
-    private final static String BLACK = "black";
-    private final static String BLUE = "blue";
     private final static int TOTAL_TILE_COUNT = 106;
 
     public void init(final LinkedList<Tile> tileList) {
 
-        for (int t = 0; t < TOTAL_TILE_COUNT/2; t++) {
+        for (int t = 0; t < TOTAL_TILE_COUNT / 2; t++) {
             Tile tileFromId = createTileFromId(t);
             tileList.add(tileFromId);
             tileList.add(tileFromId);
@@ -82,7 +77,7 @@ public class TileUtil {
     }
 
 
-    private Tile createTileFromId(int id) { // create tile according to id
+    public Tile createTileFromId(int id) { // create tile according to id
         Tile tile = new Tile(id, // id
                 (id % 13) + 1, // number value of the tile (1,2,3,...13)
                 getColor(id)); // color value of the tile
@@ -92,16 +87,16 @@ public class TileUtil {
         return tile;
     }
 
-    private String getColor(int sayi) { // return color according to number
+    private Tile.Color getColor(int sayi) { // return color according to number
         if (sayi < 13)
-            return YELLOW;
+            return Tile.Color.YELLOW;
         else if (sayi < 26)
-            return BLUE;
+            return Tile.Color.BLUE;
         else if (sayi < 39)
-            return BLACK;
+            return Tile.Color.BLACK;
         else if (sayi < 52)
-            return RED;
+            return Tile.Color.RED;
         else
-            return FAKE_JOKER;
+            return Tile.Color.FAKE_JOKER;
     }
 }

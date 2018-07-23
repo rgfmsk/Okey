@@ -3,12 +3,12 @@ package com.digitoy.emre.model;
 public class Tile {
     private int id;
     private int number;
-    private String color;
+    private Color color;
     private boolean fakeJoker = false;
     private boolean indicator = false;
     private boolean joker = false;
 
-    public Tile(int id, int number, String color) {
+    public Tile(int id, int number, Color color) {
         this.id = id;
         this.number = number;
         this.color = color;
@@ -30,11 +30,11 @@ public class Tile {
         this.number = number;
     }
 
-    public String getColor() {
+    public Color getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(Color color) {
         this.color = color;
     }
 
@@ -60,5 +60,9 @@ public class Tile {
 
     public void setJoker(boolean joker) {
         this.joker = joker;
+    }
+
+    public enum Color {
+        RED, BLACK, BLUE, YELLOW, FAKE_JOKER
     }
 }

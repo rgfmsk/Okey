@@ -29,7 +29,7 @@ public class PrinterUtil {
     public void printTile(Tile tile) {
         System.out.println(" _________ ");
         System.out.println("|         | ");
-        System.out.println("|" + fill(9, tile.getColor()) + "| ");
+        System.out.println("|" + fill(9, tile.getColor().toString()) + "| ");
         System.out.println("|" + fill(9, " ") + "|");
         System.out.println("|" + fill(9, tile.getNumber() + "") + "| ");
         System.out.println("|_________| ");
@@ -40,7 +40,7 @@ public class PrinterUtil {
         System.out.println();
         x.forEach(y -> print(y.isFakeJoker() ? "fakeJoker" : ""));
         System.out.println();
-        x.forEach(y -> print(y.getColor()));
+        x.forEach(y -> print(y.getColor().toString()));
         System.out.println();
         x.forEach(y -> print(y.isIndicator() ? "indicator" : ""));
         System.out.println();
