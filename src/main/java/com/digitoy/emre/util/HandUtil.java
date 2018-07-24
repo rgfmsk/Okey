@@ -29,28 +29,34 @@ public class HandUtil {
         findRuns(hand);
     }
 
-    private Tile nextTileInARun(List<Tile> list, List<Tile> subList, List<Tile> jokerList) {
-        Tile current = subList.get(subList.size() - 1);
+    private Tile nextTileInARun(Tile current, List<Tile> list, List<Tile> subList, List<Tile> jokerList) {
+        int cnt = 0;
+        if (subList.get(subList.size() - 1).isJoker()) { //check if the last Tile is joker in this run
+            cnt = 2; // if it is joker, get the previous element
+        } else {
+            cnt = 1;
+        }
+
+        Tile lastInLine = subList.get(subList.size() - cnt);
         Tile previous = null;
-        if (current.getNumber() == 13) {
-            if (subList.size() > 1) {
+        if (lastInLine.getNumber() == 13) {// if the last Tile in this run is 13, check if there's a Tile number 1 with same color
+            if (subList.size() > 1) {//if there's at least 2 Tiles in this run
                 previous = subList.get(subList.size() - 2);
             }
             if (previous != null) {
-                List<Tile> collect = list.stream().filter(x -> x.getColor().equals(current.getColor()) && x.getNumber() == 1).collect(Collectors.toList());
+                List<Tile> collect = list.stream().filter(x -> x.getColor().equals(lastInLine.getColor()) && x.getNumber() == 1).collect(Collectors.toList()); // check if there's number 1
                 if (!collect.isEmpty()) {
                     return collect.get(0);
                 }
             }
-        } else {
-            List<Tile> collect = list.stream().filter(x -> x.getColor().equals(current.getColor()) && x.getNumber() == current.getNumber() + 1).collect(Collectors.toList());
+        } else { // if the last Tile is not 13, check if theres plus 1 Number
+            List<Tile> collect = list.stream().filter(x -> x.getColor().equals(lastInLine.getColor()) && x.getNumber() == lastInLine.getNumber() + 1).collect(Collectors.toList());
             if (!collect.isEmpty())
                 return collect.get(0);
         }
 
-        if (jokerList.size() > 0 && subList.stream().filter(Tile::isJoker).count() < jokerList.size()
-                && (list.stream().filter(x -> x.getNumber() == current.getNumber() + 1).count() > 0 || jokerList.size() > 1)) {
-            return jokerList.get(0);
+        if (jokerList.size() > 0 && subList.stream().filter(Tile::isJoker).count() < jokerList.size()) { // if not retured before, check if theres any jokers left
+            return jokerList.get((int) subList.stream().filter(Tile::isJoker).count());
         }
 
         return null;
@@ -60,27 +66,53 @@ public class HandUtil {
     private void findRuns(final Hand hand) {
         List<List<Tile>> tempRunsList = new ArrayList<>();
 
-        for (Tile.Color color : Tile.Color.values()) {
-            List<Tile> collect = hand.getTileList().stream().filter(x -> x.getColor() == color).distinct().collect(Collectors.toList());
-            collect.sort(Comparator.comparing(Tile::getNumber));
+        for (Tile.Color color : Tile.Color.values()) { // for each color
+            List<Tile> collect = hand.getTileList().stream().filter(x -> x.getColor() == color).distinct().collect(Collectors.toList());// find the same colored Tiles
+            collect.sort(Comparator.comparing(Tile::getNumber)); //sort the collection
 
             List<Tile> tempRun = new ArrayList<>();
 
-            for (Tile t : collect) {
+            for (Tile t : collect) { // for each tile
 
-                if (tempRun.isEmpty()) {
+                if (tempRun.isEmpty()) {// if the run list is empty, add the first Tile as first
                     tempRun.add(t);
                     continue;
                 }
 
-                Tile tile = nextTileInARun(collect, tempRun, hand.getJokerList());
-                if (tile == null) {
-                    if (tempRun.size() >= 3) {
-                        tempRunsList.add(tempRun);
-                        tempRun = new ArrayList<>();
+                Tile tile = nextTileInARun(t, collect, tempRun, new ArrayList<>()); //if there's a Tile which is plus 1 of the last Tile in the run without joker
+                if (tile == null) { // if not
+                    tile = nextTileInARun(t, collect, tempRun, hand.getJokerList()); //check if theres a joker left
+                    if (tile != null) { // if there is a joker
+                        tempRun.add(tile); // add to the run
+                        tile = nextTileInARun(t, collect, tempRun, new ArrayList<>()); // check if the run would get one more Tile
+                        if (tile != null) { //
+                            if (tempRun.size() >= 3) {
+                                tempRunsList.add(tempRun);
+                                tempRun.remove(tile);
+                            }
+                            continue;
+                        } else {
+                            if (tempRun.size() >= 3) {
+                                tempRunsList.add(tempRun);
+                            }
+                            tempRun = new ArrayList<>();
+                            tempRun.add(t);
+                        }
+                    } else {
+                        if (tempRun.size() >= 3) {
+                            tempRunsList.add(tempRun);
+                            tempRun = new ArrayList<>();
+                        }
                     }
                 } else {
                     tempRun.add(tile);
+                }
+
+                if (t.getNumber() == 13) {
+                    tile = nextTileInARun(t, collect, tempRun, new ArrayList<>());
+                    if (tile != null) {
+                        tempRun.add(tile);
+                    }
                 }
             }
 
