@@ -3,7 +3,6 @@ package com.digitoy.emre.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
 
 public class Hand {
     private List<Tile> tileList = new ArrayList<>();
@@ -11,7 +10,21 @@ public class Hand {
     private List<List<Tile>> runsList = new ArrayList<>();
     private List<Set<Tile>> setsList = new ArrayList<>();
     private List<List<Tile>> pairsList = new ArrayList<>();
-    private List<Tile> unusedTileList = new ArrayList<>();
+    private List<List<Tile>> allList = new ArrayList<>();
+    private List<List<Tile>> finalList = new ArrayList<>();
+
+    public Hand() {
+    }
+
+    public Hand(List<Tile> tileList, List<Tile> jokerList, List<List<Tile>> runsList, List<Set<Tile>> setsList, List<List<Tile>> pairsList, List<List<Tile>> allList, List<List<Tile>> finalList) {
+        this.tileList = tileList;
+        this.jokerList = jokerList;
+        this.runsList = runsList;
+        this.setsList = setsList;
+        this.pairsList = pairsList;
+        this.allList = allList;
+        this.finalList = finalList;
+    }
 
     public List<Tile> getTileList() {
         return tileList;
@@ -53,11 +66,19 @@ public class Hand {
         this.pairsList = pairsList;
     }
 
-    public List<Tile> getUnusedTileList() {
-        return unusedTileList;
+    public List<List<Tile>> getFinalList() {
+        return finalList;
     }
 
-    public void setUnusedTileList(List<Tile> unusedTileList) {
-        this.unusedTileList = unusedTileList;
+    public void setFinalList(List<List<Tile>> unusedTileList) {
+        this.finalList = finalList;
+    }
+
+    public List<List<Tile>> getAllList() {
+        return allList;
+    }
+
+    public void setAllList(List<List<Tile>> allList) {
+        this.allList = allList;
     }
 }

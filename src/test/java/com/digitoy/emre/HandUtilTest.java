@@ -23,14 +23,14 @@ public class HandUtilTest {
         TileUtil tileUtil = new TileUtil();
 
         LinkedList<Tile> tileList = new LinkedList<>();
-        Tile yellow1 = tileUtil.createTileFromId(0); //yellow1
-        tileList.add(yellow1);
-        tileList.add(yellow1);
 
         Tile red2 = tileUtil.createTileFromId(40); //red2
         Tile red3 = tileUtil.createTileFromId(41); //red3
+        Tile red5 = tileUtil.createTileFromId(43); //red5
+        tileList.add(red2);
         tileList.add(red2);
         tileList.add(red3);
+        tileList.add(red5);
 
         Tile black11 = tileUtil.createTileFromId(36); //black11
         Tile black12 = tileUtil.createTileFromId(37); //black12
@@ -70,9 +70,9 @@ public class HandUtilTest {
 
 
         Assert.assertEquals(1, hand.getJokerList().size()); //red1
-        Assert.assertEquals(1, hand.getPairsList().size()); //yellow1
-        Assert.assertEquals(5, hand.getSetsList().size()); // (1,1,1) , (10,10,10) , (11,11,J) , (12,12,J) , (13,13,J)
-        Assert.assertEquals(3, hand.getRunsList().size()); // (2,3,J), (10,11,12,13) , (10,11,12,13,1)
+        Assert.assertEquals(1, hand.getPairsList().size()); //red2
+        Assert.assertEquals(4, hand.getSetsList().size()); // (10,10,10) , (11,11,J) , (12,12,J) , (13,13,J)
+        Assert.assertEquals(4, hand.getRunsList().size()); // (2,3,J), (2,3,J,5), (10,11,12,13) , (10,11,12,13,1)
 
 
     }

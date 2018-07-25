@@ -16,6 +16,7 @@ public class HandUtil {
         for (Player player : players) {
             initHand(player.getHand());
         }
+        compareHands(players);
     }
 
     public void initHand(final Hand hand) {
@@ -27,6 +28,31 @@ public class HandUtil {
         findPairs(hand);
         findSets(hand);
         findRuns(hand);
+        collectAll(hand);
+    }
+
+    private void collectAll(final Hand hand) {
+        hand.getAllList().addAll(hand.getPairsList());
+        hand.getAllList().addAll((Collection<? extends List<Tile>>) hand.getSetsList());
+        hand.getAllList().addAll(hand.getRunsList());
+    }
+
+    private void compareHands(final List<Player> players) {
+        for (Player player : players) {
+            Hand hand = new Hand(player.getHand().getTileList(),
+                    player.getHand().getJokerList(),
+                    player.getHand().getRunsList(),
+                    player.getHand().getSetsList(),
+                    player.getHand().getPairsList(),
+                    player.getHand().getAllList(),
+                    player.getHand().getFinalList());
+            List<List<Tile>> all = new ArrayList<>(hand.getAllList());
+            for (List<Tile> tiles : all) {
+                hand.getTileList().removeAll(tiles);
+                hand.getFinalList().add(tiles);
+                //@todo burdasın
+            }
+        }
     }
 
     private Tile nextTileInARun(Tile current, List<Tile> list, List<Tile> subList, List<Tile> jokerList) {
@@ -50,7 +76,8 @@ public class HandUtil {
                 }
             }
         } else { // if the last Tile is not 13, check if theres plus 1 Number
-            List<Tile> collect = list.stream().filter(x -> x.getColor().equals(lastInLine.getColor()) && x.getNumber() == lastInLine.getNumber() + 1).collect(Collectors.toList());
+            final int ccc = cnt;
+            List<Tile> collect = list.stream().filter(x -> x.getColor().equals(lastInLine.getColor()) && x.getNumber() == lastInLine.getNumber() + ccc).collect(Collectors.toList());
             if (!collect.isEmpty())
                 return collect.get(0);
         }
@@ -85,44 +112,44 @@ public class HandUtil {
                     if (tile != null) { // if there is a joker
                         tempRun.add(tile); // add to the run
                         tile = nextTileInARun(t, collect, tempRun, new ArrayList<>()); // check if the run would get one more Tile
-                        if (tile != null) { //
+                        if (tile != null) { //if it gets
                             if (tempRun.size() >= 3) {
-                                tempRunsList.add(tempRun);
-                                tempRun.remove(tile);
+                                tempRunsList.add(tempRun); //add the run to list
+                                tempRun = new ArrayList<>(tempRun); //copy the run
+                                tempRun.add(tile); //add the next tile to copied run (eg: 1,2,J and 1,2,J,4)
                             }
-                            continue;
-                        } else {
+                        } else {//if it doesn't
                             if (tempRun.size() >= 3) {
-                                tempRunsList.add(tempRun);
+                                tempRunsList.add(tempRun); // add the run to list
                             }
-                            tempRun = new ArrayList<>();
-                            tempRun.add(t);
+                            tempRun = new ArrayList<>(); //clear the run
+                            tempRun.add(t); //add the current Tile to list
                         }
-                    } else {
-                        if (tempRun.size() >= 3) {
+                    } else { // if no joker
+                        if (tempRun.size() >= 3) { //check if the run is long enough
                             tempRunsList.add(tempRun);
                             tempRun = new ArrayList<>();
                         }
                     }
-                } else {
-                    tempRun.add(tile);
+                } else { // if there's a tile with plus 1
+                    tempRun.add(tile); // add to the run
                 }
 
-                if (t.getNumber() == 13) {
-                    tile = nextTileInARun(t, collect, tempRun, new ArrayList<>());
+                if (t.getNumber() == 13) { // if the current Tile is 13
+                    tile = nextTileInARun(t, collect, tempRun, new ArrayList<>()); //search for a 1, ( 12,13,1 )
                     if (tile != null) {
                         tempRun.add(tile);
                     }
                 }
             }
 
-            if (tempRun.size() >= 3) {
-                tempRunsList.add(tempRun);
+            if (tempRun.size() >= 3) { // if list is long enough at the end of the loop
+                tempRunsList.add(tempRun); // add the run to list
                 tempRun = new ArrayList<>();
             }
         }
 
-        hand.setRunsList(tempRunsList);
+        hand.setRunsList(tempRunsList); //set the runsList
 
     }
 
@@ -131,9 +158,9 @@ public class HandUtil {
         Iterator<Tile> iterator = tempList.iterator();
         for (; iterator.hasNext(); ) {
             Tile t = iterator.next();
-            if (t.isJoker()) {
-                iterator.remove();
-                hand.getJokerList().add(t);
+            if (t.isJoker()) { // find jokers
+                iterator.remove(); // remove from Tile list
+                hand.getJokerList().add(t); // add to joker List
             }
         }
     }
@@ -142,21 +169,21 @@ public class HandUtil {
         Set<Tile> collect1 = new HashSet<>(hand.getTileList());
         for (Tile tile : collect1) {
             List<Tile> collect = hand.getTileList().stream().filter(x -> x.getId() == tile.getId()).collect(Collectors.toList());
-            if (collect.size() > 1) {
-                hand.getPairsList().add(collect);
+            if (collect.size() > 1) { // if there are pairs
+                hand.getPairsList().add(collect); // add to pairs list
             }
         }
     }
 
 
     private void findSets(final Hand hand) {
-        for (int i = 1; i < hand.getTileList().size(); i++) {
+        for (int i = 1; i < 14; i++) { // for each number 1 to 13
             final int num = i;
-            Set<Tile> tileSet = hand.getTileList().stream().filter(x -> x.getNumber() == num).collect(Collectors.toSet());
-            if (tileSet.size() > 2) {
-                hand.getSetsList().add(tileSet);
-            } else if (tileSet.size() == 2 && hand.getJokerList().size() > 0) {
-                tileSet.add(hand.getJokerList().get(0));
+            Set<Tile> tileSet = hand.getTileList().stream().filter(x -> x.getNumber() == num).collect(Collectors.toSet()); //collect the same numbers distinctly
+            if (tileSet.size() > 2) { // if the set is long enough
+                hand.getSetsList().add(tileSet); // add to sets list
+            } else if (tileSet.size() == 2 && hand.getJokerList().size() > 0) {// if its not long enough but there are jokers
+                tileSet.add(hand.getJokerList().get(0)); // user the joker
                 hand.getSetsList().add(tileSet);
             }
         }
