@@ -45,6 +45,7 @@ public class HandUtil {
             if (maxList < playerSize) {
                 maxList = playerSize;
                 player.setWinner(true);
+                players.stream().filter(x -> x.getName() != player.getName()).forEach(x -> x.setWinner(false));
             }
         }
     }
