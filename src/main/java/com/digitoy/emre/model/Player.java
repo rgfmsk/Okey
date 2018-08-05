@@ -7,6 +7,7 @@ public class Player {
     private int id;
     private String name;
     private boolean extraTile = false;
+    private boolean winner = false;
     private Hand hand = new Hand();
 //    private List<Tile> tileList = new ArrayList<>();
 
@@ -45,6 +46,14 @@ public class Player {
 
     public void setHand(Hand hand) {
         this.hand = hand;
+    }
+    
+    public boolean isWinner() {
+        return winner;
+    }
+
+    public void setWinner(boolean winner) {
+        this.winner = winner;
     }
 
     //    public List<Tile> getTileList() {
