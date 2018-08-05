@@ -44,19 +44,9 @@ public class Okey {
         pu.printPlayers(playerList);
 
         handUtil.initHands(playerList);
-
-//        handUtil.findSets(playerList.get(0).getHand());
-//        List<Set<Tile>> ss2 = handUtil.findAllSets(playerList.get(1).getHand());
-//        List<Set<Tile>> ss3 = handUtil.findAllSets(playerList.get(2).getHand());
-//        List<Set<Tile>> ss4 = handUtil.findAllSets(playerList.get(3).getHand());
-
-        tileList.stream().filter(y -> y.isFakeJoker() || y.isJoker() || y.isIndicator()).forEach(x -> System.out.println(" id: " + x.getId() +
-                " - " + x.getColor() + " - " + x.getNumber() +
-                " index : " + tileList.indexOf(x) +
-                " - " + x.isIndicator() + " - " + x.isJoker() + " - " + x.isFakeJoker()));
-
-
-        System.out.println();
+        
+        System.out.println("Best hand is at : " + playerList.stream().filter(x->x.isWinner()).collect(Collectors.toList()).get(0).getName());
+        pu.printPlayers(playerList.stream().filter(x->x.isWinner()).collect(Collectors.toList()));
 
     }
 
