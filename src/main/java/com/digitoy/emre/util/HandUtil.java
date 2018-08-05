@@ -33,24 +33,18 @@ public class HandUtil {
 
     private void collectAll(final Hand hand) {
         hand.getAllList().addAll(hand.getPairsList());
-        hand.getAllList().addAll((Collection<? extends List<Tile>>) hand.getSetsList());
+        hand.getAllList().addAll(new ArrayList(hand.getSetsList()));
         hand.getAllList().addAll(hand.getRunsList());
     }
 
-    private void compareHands(final List<Player> players) {
+    private void compareHands(final List<Player> players) { // set the winner who has greatest possible number of tile lists
+        int maxList = 0;
+
         for (Player player : players) {
-            Hand hand = new Hand(player.getHand().getTileList(),
-                    player.getHand().getJokerList(),
-                    player.getHand().getRunsList(),
-                    player.getHand().getSetsList(),
-                    player.getHand().getPairsList(),
-                    player.getHand().getAllList(),
-                    player.getHand().getFinalList());
-            List<List<Tile>> all = new ArrayList<>(hand.getAllList());
-            for (List<Tile> tiles : all) {
-                hand.getTileList().removeAll(tiles);
-                hand.getFinalList().add(tiles);
-                //@todo burdasın
+            int playerSize = player.getHand().getAllList().size();
+            if (maxList < playerSize) {
+                maxList = playerSize;
+                player.setWinner(true);
             }
         }
     }
